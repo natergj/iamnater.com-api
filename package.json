@@ -1,0 +1,28 @@
+{
+  "name": "iamnater.com-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/natergj/iamnater.com-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/natergj/iamnater.com-api/issues"
+  },
+  "homepage": "https://github.com/natergj/iamnater.com-api#readme",
+  "devDependencies": {
+    "tslint": "^6.0.0",
+    "typescript": "^3.7.5",
+    "typescript-tslint-plugin": "^0.5.5"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
