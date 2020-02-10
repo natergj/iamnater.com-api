@@ -1,0 +1,28 @@
+version: 0.2
+
+env:
+  variables:
+    NODE_ENV: "production"
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+  pre_build:
+    commands:
+      - echo Installing source NPM dependencies...
+      - npm install --only=dev
+      - npm install
+  build:
+    commands:
+      - echo Build started on `date`
+      - npm run build
+  post_build:
+    commands:
+      - echo Cleaning build dependencies
+      - npm prune --production 
+
+artifacts:
+  files:
+    - "dist/**/*.js"
+    - "node_modules/**/*"
