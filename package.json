@@ -2,10 +2,12 @@
   "name": "iamnater.com-api",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
+    "watch": "tsc -w",
+    "sam": "sam local start-api",
     "run": "node ."
   },
   "repository": {
@@ -19,11 +21,13 @@
   },
   "homepage": "https://github.com/natergj/iamnater.com-api#readme",
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.40",
     "tslint": "^6.0.0",
     "typescript": "^3.7.5",
     "typescript-tslint-plugin": "^0.5.5"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "apollo-server-lambda": "^2.10.0",
+    "graphql": "^14.6.0"
   }
 }

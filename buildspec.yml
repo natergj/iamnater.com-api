@@ -25,4 +25,4 @@ phases:
 artifacts:
   files:
     - "dist/**/*.js"
-    - "node_modules/**/*"
+    - "node_modules"

@@ -1,7 +1,17 @@
-import express from "express";
+import { ApolloServer, gql } from "apollo-server-lambda";
 
-const app = express();
+const typeDefs = gql`
+  type Query {
+    hello: String
+  }
+`;
 
-app.get("/health", (_, res) => res.end("OK"));
+const resolvers = {
+  Query: {
+    hello: () => "Hello GraphQL!",
+  },
+};
 
-app.listen(8080);
+const server = new ApolloServer({ typeDefs, resolvers });
+
+export const graphqlHandler = server.createHandler();
