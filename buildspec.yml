@@ -30,3 +30,4 @@ artifacts:
     node_modules:
       files:
         - node_modules/**/*
+      base-directory: ./
