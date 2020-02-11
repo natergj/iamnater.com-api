@@ -2,4 +2,4 @@
 
 const dist = require("./dist/index");
 
-exports.graphqlHandler = dist.graphqlHandler;
+exports.handler = dist.graphqlHandler;

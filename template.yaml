@@ -10,7 +10,7 @@ Resources:
   IAmNaterGraphQL:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: samIndex.graphqlHandler
+      Handler: index.handler
       Runtime: nodejs12.x
       Events:
         GraphQlRequest:
