@@ -20,7 +20,7 @@ phases:
   post_build:
     commands:
       - echo Cleaning build dependencies
-      - npm prune --production 
+      - npm prune --production
 
 artifacts:
   files:

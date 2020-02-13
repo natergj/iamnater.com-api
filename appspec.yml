@@ -1,9 +1,0 @@
-version: 0.0
-resources:
-  - iAmNaterApiLambda:
-      type: AWS::Lambda::Function
-      properties:
-        name: "iamnater_com-api"
-        alias: "alias-of-iamnater_com-api"
-        CurrentVersion: "1"
-        TargetVersion: "2"
