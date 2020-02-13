@@ -12,6 +12,7 @@ Resources:
     Properties:
       Handler: index.handler
       Runtime: nodejs12.x
+      CodeUri: deploy
       Events:
         GraphQlRequest:
           Type: Api
