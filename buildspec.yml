@@ -25,6 +25,6 @@ phases:
 artifacts:
   files:
     - "index.js"
-    - "appspec.yml"
+    - "template.yml"
     - "dist/**/*.js"
     - "node_modules/**/*"
