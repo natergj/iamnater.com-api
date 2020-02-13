@@ -8,7 +8,7 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    hello: () => "Hello GraphQL Lambda!",
+    hello: () => "Hello GraphQL Lambda CloudFormation!",
   },
 };
 
