@@ -21,6 +21,8 @@ phases:
     commands:
       - echo Cleaning build dependencies
       - npm prune --production
+    finally:
+      - sed -i "s/CODEBUILD_BUILD_ID/$CODEBUILD_BUILD_ID/g" template.yml
 
 artifacts:
   type: zip

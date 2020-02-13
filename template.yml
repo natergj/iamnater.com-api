@@ -12,7 +12,7 @@ Resources:
     Properties:
       Handler: index.handler
       Runtime: nodejs12.x
-      CodeUri: s3://codepipeline-us-east-2-106888872198/iamnater_com-api/BuildArtif/$CODEBUILD_BUILD_ID
+      CodeUri: s3://codepipeline-us-east-2-106888872198/iamnater_com-api/BuildArtif/CODEBUILD_BUILD_ID
       Events:
         GraphQlRequest:
           Type: Api
