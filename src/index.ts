@@ -24,18 +24,16 @@ const resolvers = {
       return "Hello GraphQL Lambda CloudFormation!";
     },
     recipes: async () => {
-      const recipe: any = await db
-        .scan({ TableName: "Recipes" })
-        .promise();
-      return recipe.Items.map((item: any) => DynamoDB.Converter.unmarshall(item));
+      const recipe: any = await db.scan({ TableName: "Recipes" }).promise();
+      return recipe.Items.map((item: any) => DynamoDB.Converter.unmarshall(item)).sort((a, b) =>
+        a.Title.localeCompare(b.Title),
+      );
     },
     recipeById: async (_, { id }) => {
-      const recipe: any = await db
-        .getItem({ TableName: "Recipes", Key: { Id: { S: id } } })
-        .promise();
+      const recipe: any = await db.getItem({ TableName: "Recipes", Key: { Id: { S: id } } }).promise();
       return DynamoDB.Converter.unmarshall(recipe.Item);
-    }
     },
+  },
   Recipe: {
     id: (recipe: any) => recipe.Id,
     title: (recipe: any) => recipe.Title,
