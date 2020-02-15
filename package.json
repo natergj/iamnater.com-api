@@ -22,12 +22,15 @@
   "homepage": "https://github.com/natergj/iamnater.com-api#readme",
   "devDependencies": {
     "@types/aws-lambda": "^8.10.40",
+    "@types/node": "^13.7.1",
     "tslint": "^6.0.0",
     "typescript": "^3.7.5",
     "typescript-tslint-plugin": "^0.5.5"
   },
   "dependencies": {
     "apollo-server-lambda": "^2.10.0",
+    "aws-sdk": "^2.619.0",
+    "dotenv": "^8.2.0",
     "graphql": "^14.6.0"
   }
 }
