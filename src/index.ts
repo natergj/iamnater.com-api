@@ -35,7 +35,7 @@ const resolvers = {
         .promise();
       return DynamoDB.Converter.unmarshall(recipe.Item);
     }
-  },
+    },
   Recipe: {
     id: (recipe: any) => recipe.Id,
     title: (recipe: any) => recipe.Title,
@@ -55,7 +55,12 @@ const server = new ApolloServer({ typeDefs, resolvers });
 
 export const graphqlHandler = server.createHandler({
   cors: {
-    origin: ["https://www.iamnater.com", "https://iamnater.com", "http://localhost:8080"],
+    origin: [
+      "https://www.iamnater.com",
+      "https://iamnater.com",
+      "http://localhost:8080",
+      "http://www.iamnater.com.s3-website.us-east-2.amazonaws.com",
+    ],
     credentials: true,
   },
 });
