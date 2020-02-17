@@ -41,6 +41,7 @@ const resolvers = {
     instructions: recipe => recipe.Instructions,
     unformatted: recipe => recipe.Unformatted,
     description: recipe => recipe.Description,
+    uploads: recipe => recipe.Uploads ? recipe.Uploads : [],
   },
   Ingredient: {
     name: ingredient => ingredient.Name,
@@ -57,6 +58,7 @@ export const graphqlHandler = server.createHandler({
       "https://www.iamnater.com",
       "https://iamnater.com",
       "http://localhost:8080",
+      "http://home.local:8080",
       "http://www.iamnater.com.s3-website.us-east-2.amazonaws.com",
     ],
     credentials: true,

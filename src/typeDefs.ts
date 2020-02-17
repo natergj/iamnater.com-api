@@ -15,6 +15,13 @@ export default gql`
     recipeById(id: ID!): Recipe
   }
 
+  type User {
+    id: ID!
+    email: String
+    name: String
+    roles: [String]
+  }
+
   type Recipe {
     """
     Unique ID for recipe
@@ -46,6 +53,10 @@ export default gql`
     """
     ingredients: [Ingredient]
 
+    """
+    Picture uploads
+    """
+    uploads: [Upload]
   }
 
   type Ingredient {
@@ -90,5 +101,19 @@ export default gql`
     fluid_ounce
     gram
     pound
+    pkg
   }
+
+  type Upload {
+    id: ID!
+    fileName: String
+    filePath: String
+    size: Int
+    encoding: String
+    extension: String
+    uploadedBy: User
+    updatedBy: User
+    updatedOn: String
+  }
+
 `;
