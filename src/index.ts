@@ -3,15 +3,14 @@ dotenv.config();
 
 import AWS from "aws-sdk";
 import { ApolloServer } from "apollo-server-lambda";
-import typeDefs from "./typeDefs";
-import resolvers from "./resolvers";
+import schema from "./schema";
 import context from "./context";
 
 if (process.env.RUNTIME_ENV === "local") {
   AWS.config.logger = console;
 }
 
-const server = new ApolloServer({ typeDefs, resolvers, context });
+const server = new ApolloServer({ schema, context });
 
 export const graphqlHandler = server.createHandler({
   cors: {

@@ -30,7 +30,7 @@ export default async ({ event, context }: { event: APIGatewayProxyEvent; context
       const currentUser = await openIdClient.getTokenClaims(token);
       const userId = `${currentUser.iss}_${currentUser.sub}`;
       let user: any = await db.getItem({ TableName: "Users", Key: { Id: { S: userId }}}).promise();
-      if (!user.Item || user.Item.Id) {
+      if (!user.Item || !user.Item.Id) {
         user = { Item: {
           Id: { S: userId },
           Email: { S: currentUser.email },
@@ -38,7 +38,14 @@ export default async ({ event, context }: { event: APIGatewayProxyEvent; context
         }};
         await db.putItem({ TableName: "Users", ...user }).promise();
       }
-      ctx.currentUser = DynamoDB.Converter.unmarshall(user.Item);
+      const userData = DynamoDB.Converter.unmarshall(user.Item);
+      console.log("db user", userData);
+      if (!userData.Roles) {
+        userData.Roles = [];
+      } else {
+        userData.Roles = userData.Roles.values;
+      }
+      ctx.currentUser = userData;
     }
   }
   return ctx;

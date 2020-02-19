@@ -1,14 +1,11 @@
 import { DynamoDB } from "aws-sdk";
-import { ApolloError } from "apollo-server-lambda";
 
 export default {
   Query: {
-    hello: () => {
-      return "Hello GraphQL Lambda CloudFormation!";
-    },
     recipes: async (_, __, { db }) => {
-      const recipe: any = await db.scan({ TableName: "Recipes" }).promise();
-      return recipe.Items.map((item: any) => DynamoDB.Converter.unmarshall(item)).sort((a, b) =>
+      const recipes: any = await db.scan({ TableName: "Recipes" }).promise();
+      console.log(recipes);
+      return recipes.Items.map((item: any) => DynamoDB.Converter.unmarshall(item)).sort((a, b) =>
         a.Title.localeCompare(b.Title),
       );
     },
@@ -16,14 +13,6 @@ export default {
       const recipe: any = await db.getItem({ TableName: "Recipes", Key: { Id: { S: id } } }).promise();
       return DynamoDB.Converter.unmarshall(recipe.Item);
     },
-    user: async (_, __, ctx) => {
-      if (ctx.currentUser) {
-        return ctx.currentUser;
-      }
-      else {
-        throw new ApolloError("Unauthorized", "401");
-      }
-    }
   },
   Recipe: {
     id: (recipe: any) => recipe.Id,
@@ -39,10 +28,4 @@ export default {
     measure: ingredient => ingredient.Measure,
     amount: ingredient => ingredient.Quantity,
   },
-  User: {
-    id: user => user.Id,
-    name: user => user.Name,
-    email: user => user.Email,
-    roles: user => user.Roles || [],
-  }
 };

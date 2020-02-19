@@ -1,9 +1,7 @@
 import { gql } from "apollo-server-lambda";
 
 export default gql`
-  type Query {
-    hello: String
-
+  extend type Query {
     """
     Get a list of recipes
     """
@@ -13,18 +11,6 @@ export default gql`
     Get details about a specific recipe given the ID
     """
     recipeById(id: ID!): Recipe
-
-    """
-    Get details about currently logged in user
-    """
-    user: User
-  }
-
-  type User {
-    id: ID!
-    email: String
-    name: String
-    roles: [String]
   }
 
   type Recipe {
@@ -120,5 +106,4 @@ export default gql`
     updatedBy: User
     updatedOn: String
   }
-
 `;
