@@ -13,6 +13,11 @@ export default gql`
     Get details about a specific recipe given the ID
     """
     recipeById(id: ID!): Recipe
+
+    """
+    Get details about currently logged in user
+    """
+    user: User
   }
 
   type User {
