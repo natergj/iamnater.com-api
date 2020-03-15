@@ -47,7 +47,7 @@ export default gql`
     """
     Picture uploads
     """
-    uploads: [Upload]
+    uploads: [FileUpload]
   }
 
   type Ingredient {
@@ -95,7 +95,7 @@ export default gql`
     pkg
   }
 
-  type Upload {
+  type FileUpload {
     id: ID!
     fileName: String
     filePath: String

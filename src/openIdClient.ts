@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import jwkToPem from "jwk-to-pem";
-import fetch from "node-fetch";
+// well-known https://cognito-idp.us-east-2.amazonaws.com/us-east-2_SuU6q7k0J/.well-known/openid-configuration
 
 interface JWK {
   kid: string;
@@ -19,128 +19,29 @@ interface TokenData {
   exp: number;
 }
 
-enum OpenIdProvider {
-  GOOGLE = "google",
-  MICROSOFT = "microsoft",
-}
-
-const issuerProviderLookup = new Map<string, OpenIdProvider>([
-  ["accounts.google.com", OpenIdProvider.GOOGLE],
-  ["login.microsoftonline.com", OpenIdProvider.MICROSOFT],
-]);
-
-const discoveryUrls = new Map<OpenIdProvider, string>([
-  [OpenIdProvider.GOOGLE, "https://accounts.google.com/.well-known/openid-configuration"],
-  [OpenIdProvider.MICROSOFT, "https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration"],
-]);
-
-const providerConfigs = new Map([
-  [
-    OpenIdProvider.GOOGLE,
-    {
-      issuer: "https://accounts.google.com",
-      authorization_endpoint: "https://accounts.google.com/o/oauth2/v2/auth",
-      device_authorization_endpoint: "https://oauth2.googleapis.com/device/code",
-      token_endpoint: "https://oauth2.googleapis.com/token",
-      userinfo_endpoint: "https://openidconnect.googleapis.com/v1/userinfo",
-      revocation_endpoint: "https://oauth2.googleapis.com/revoke",
-      jwks_uri: "https://www.googleapis.com/oauth2/v3/certs",
-      response_types_supported: [
-        "code",
-        "token",
-        "id_token",
-        "code token",
-        "code id_token",
-        "token id_token",
-        "code token id_token",
-        "none",
-      ],
-      subject_types_supported: ["public"],
-      id_token_signing_alg_values_supported: ["RS256"],
-      scopes_supported: ["openid", "email", "profile"],
-      token_endpoint_auth_methods_supported: ["client_secret_post", "client_secret_basic"],
-      claims_supported: [
-        "aud",
-        "email",
-        "email_verified",
-        "exp",
-        "family_name",
-        "given_name",
-        "iat",
-        "iss",
-        "locale",
-        "name",
-        "picture",
-        "sub",
-      ],
-      code_challenge_methods_supported: ["plain", "S256"],
-      grant_types_supported: [
-        "authorization_code",
-        "refresh_token",
-        "urn:ietf:params:oauth:grant-type:device_code",
-        "urn:ietf:params:oauth:grant-type:jwt-bearer",
-      ],
-    },
-  ],
-]);
-
-const providerJwks = new Map<OpenIdProvider, JWK[]>([
-  [
-    OpenIdProvider.GOOGLE,
-    [
-      {
-        e: "AQAB",
-        kty: "RSA",
-        alg: "RS256",
-        n:
-          "yOSrFI0IS_rZjn1-RGdKt4hyn2qnptQO_mNdKC6A1hfZ8MnusrJY6dNjWdIIk5Ul_RwkzjlNuk7jz5CEtYqbMw7BMaNPDfL4SO7ASBMj7yuykptNvcMno5lvgYP_YiIADJ7tfSnXy7XAv8P40cLa0GkiXBbcIg6X43MdPQq_csmuMPB-qG1g7Pq9ybAud2BSbeqa3yYChBAGNxk6zjQXl9V7nZWfIE-gCyN1u47MFKJVHGWg5ivcm9E3l5cKWG-_CGf229h6s8IVjfRpPJTY5utTroOu1mr6q-5RDQWV1GmWrSCTdEXCtFsdMsybhi1Z4Pc7e4tmCuv6mW6-aGPjbw",
-        use: "sig",
-        kid: "762fa637af953590db8bb8a636bf11d4360abc98",
-      },
-      {
-        e: "AQAB",
-        kty: "RSA",
-        alg: "RS256",
-        n:
-          "yULcoP9V6feuEjCBkZ2RDHM9WLmeLJ4VlaZopidkp4ix72SKte74r6SETRdlf0K-vtfGQMPQQj1K_Z8QvHoeb1xl_KrDZ8YRzXws93Mw92RTAr9RsXKPmUVMt8I_Ed7PzBXKiDIG9JpZ35jZIbrsFYrInEomulvXDR-QormXkNe4aGxGljumzUAm25Kqp_539llrQ4uySQ8DPc9e7Pq6S9QRO7bJe2GAupkBcPD2k7p8wpIbO_Iy5gACrReipGwZtUDLeVjo9x3kVoJT-7ktRiO8r64dyjqj85uT7Jz3SnimKx1Rb3ZBtBj2CeBwnpCx7aYjmrOMiJH9B5na7TMJ3Q",
-        use: "sig",
-        kid: "79c809dd1186cc228c4baf9358599530ce92b4c8",
-      },
-    ],
-  ],
-]);
+const providerJwks = [
+  {
+    alg: "RS256",
+    e: "AQAB",
+    kid: "b44fqNRv9qD2RnHDBO29J6jgGva1h8oQXldP2PfsJNM=",
+    kty: "RSA",
+    n:
+      "ksAvegL1GM5Nu3FjH9lWY2uCgU1jYrd44jffF40WOn1FSKp3_E5BAfZvb237P0RH81d7vtGl5ZVS9B_SxqioC32_WLETHcKsoY7yZl6_OHvBIdWZAHjim4Cq9tMU2PvWzMZ8fVVfV_1V4Wr0cKoF1SCuhVf3QPuhXacCnoIKE5s5aPQwta-Gr0sZ2zDp0mmP9yp4TB1N7gT1ZmOdTiVPHfb7FAg8YC8hVH4RJfxaeg1Tkt300VQKg9-AcZpCNwqmECo878HACRFcYRyv3wQPsf3JogAeFhzAoTZgEVLh3DmKhWFFE_V_6gQzHK72gQdUqDvODP8F5ZczSop1fJbQ6w",
+    use: "sig",
+  },
+  {
+    alg: "RS256",
+    e: "AQAB",
+    kid: "3YVDAQSEjthfQy0Hfw1j01VygIeueG3kvx5Cjc8/rJ4=",
+    kty: "RSA",
+    n:
+      "qEv0K5qPsfTvWAMWTciHMkBR2wNb0CcMYFJU2_lBNKoH8ZodT47oBuxDto9PZ_31o9uUpk_cdAcU0hEY9tml1s4yZ1ssceRyMbo9pgSPYZ0JO50HnORM_se5kP0U9TOPfRWuWyKmRRruw6OMoia9D3k3sf78J7p5RzfW4YiVuU0lM2EEDpr1aJk6aKSWMnYOUviDHRkM7Ufsa54X6bTWdkjiI3bOIpc5Zy-74szy6syrdYPDvztLiaOs_8Ru33CpO25I2P7uLNWFd3R9uRIlOLfvwDeVenB4ZfAB5R3Sx1WRA1NFVSYWQii_IzhwTIQkKi9N1etnMSnKKX94CoK4Zw",
+    use: "sig",
+  },
+];
 
 class OpenIdClient {
   private validatedTokens = new Map<string, TokenData>();
-
-  private getJwks = async (provider?: OpenIdProvider): Promise<any[]> => {
-    if (!provider) {
-      return [];
-    }
-    if (!providerJwks.get(provider)) {
-      const config = await this.getConfig(provider);
-      const resp = await fetch(config.jwks_uri);
-      const jwksConfig = await resp.json();
-      providerJwks.set(provider, jwksConfig!.keys);
-    }
-    return providerJwks.get(provider)!;
-  };
-
-  private async getConfig(provider) {
-    const config = providerConfigs.get(provider);
-    return config ? config : await this.fetchProviderConfig(provider);
-  }
-
-  private async fetchProviderConfig(provider) {
-    const url = discoveryUrls.get(provider);
-    if (!url) {
-      throw new Error("unknown provider");
-    }
-    const resp = await fetch(url);
-    const config = await resp.json();
-    providerConfigs.set(provider, config);
-    return config;
-  }
 
   public getTokenClaims = async (token: string): Promise<TokenData> => {
     let tokenClaims = this.validatedTokens.get(token);
@@ -148,15 +49,10 @@ class OpenIdClient {
       return tokenClaims;
     }
 
-    const { header, payload } = jwt.decode(token, { complete: true });
-    const provider = issuerProviderLookup.get(payload.iss);
-    let jwks = await this.getJwks(provider);
-    if (jwks.length < 1) {
-      throw new Error("Invalid Token: cannot validate");
-    }
-    const jwk = jwks.filter(c => c.kid === header.kid)[0];
+    const { header } = jwt.decode(token, { complete: true });
+    const jwk = providerJwks.filter(c => c.kid === header.kid)[0];
     if (!jwk) {
-      throw new Error("Invalid Token: cannot validate");
+      throw new Error("Invalid Token: unknown signing cert");
     }
     const { iss, sub, email, name, exp } = jwt.verify(token, jwkToPem(jwk));
     tokenClaims = { iss, sub, email, name, exp };
