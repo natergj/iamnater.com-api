@@ -29,7 +29,7 @@
     "typescript-tslint-plugin": "^0.5.5"
   },
   "dependencies": {
-    "apollo-server-lambda": "^2.10.0",
+    "apollo-server-lambda": "^2.14.2",
     "aws-sdk": "^2.619.0",
     "concurrently": "^5.1.0",
     "dotenv": "^8.2.0",
